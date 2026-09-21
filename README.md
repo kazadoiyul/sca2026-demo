@@ -238,21 +238,17 @@ Details in [Run Actor and retrieve data via API](https://docs.apify.com/academy/
 Your scraper runs in the cloud. The last step is putting it on
 [Apify Store](https://apify.com/store), where other people can find it, run it, and pay for it.
 
-### 1. Add your billing details
+### 1. Publish to Apify Store
 
-In Apify Console, go to **Settings > Billing** and fill in your billing and payout details. You
-need this before you can be paid.
-
-### 2. Publish to Apify Store
-
-Open your Actor in Apify Console, go to the **Publication** tab, and work through the checklist:
-title, description, categories, and a README (the one in your Actor folder becomes your Store
-listing, so make it good). Then submit. Full checklist in
+Open your Actor in Apify Console, go to the **Publishing** tab, and fill in every section: a logo
+and description, monetization, sample output, output schema, and Actor permissions. Your Actor's
+README becomes its Store page, so make it good. When all sections are marked complete, select
+**Publish on Store**. Full checklist in
 [Publish your Actor](https://docs.apify.com/platform/actors/publishing/publish).
 
-### 3. Pick a pricing model
+### 2. Pick a pricing model
 
-In the **Publication** tab, open **Monetization** and follow the wizard:
+In the **Publishing** tab, open the **Monetization** section and follow the wizard:
 
 - **Pay per usage** - users pay for the platform resources their run consumes. Simplest to set up.
 - **Pay per event** - you define the events users pay for, such as each result returned. Usually
@@ -262,10 +258,12 @@ Pick your **primary event** (the one that best represents what your Actor delive
 scraped item), review, and submit. Walkthrough in
 [Monetize your Actor](https://docs.apify.com/platform/actors/publishing/monetize).
 
-### 4. Watch your earnings
+### 3. Watch your earnings
 
-Once people are using it, your earnings show up in Apify Console under **Insights**. Payout
-invoices are generated monthly.
+Once people are using it, your earnings show up in Apify Console under
+**Development > Insights**. Payout invoices are generated monthly, and the same place is where you
+fill in your payout details and verify your identity when you are ready to be paid. See
+[Monthly payouts](https://docs.apify.com/platform/actors/publishing/monetize/monthly-payouts).
 
 > **Note:** Pay-per-event Actors with limited permissions automatically become eligible for
 > autonomous agent payment over protocols like x402 and Skyfire, so an AI agent can discover and
