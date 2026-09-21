@@ -11,3 +11,6 @@ storage/
 
 # IDE
 .idea/
+
+# macOS
+.DS_Store
