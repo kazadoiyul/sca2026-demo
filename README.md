@@ -154,8 +154,12 @@ Every result is one JSON file in that folder. That is your scraped data. The inp
 is in `storage/key_value_stores/default/INPUT.json`, and you can edit that file to change the
 input for your next local run.
 
-> **Note:** If you want to rerun from a clean slate, use `apify run --purge` to wipe the local
-> storage before the run. Otherwise the crawler remembers which URLs it already visited.
+> **Note:** Whether a rerun starts clean depends on your template. Crawlee templates, including
+> the Cheerio one, purge the default request queue, dataset, and key-value store before every
+> `apify run`, so you get the same results instead of duplicates. Add `--no-purge` to keep what is
+> already in `storage/`. Templates that do not use Crawlee keep the storage instead, so the
+> crawler remembers which URLs it visited: run `apify run --purge` (or `-p`) when you want a clean
+> slate.
 
 ---
 
