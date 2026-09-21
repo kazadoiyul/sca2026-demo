@@ -1,15 +1,68 @@
 import { createCheerioRouter } from '@crawlee/cheerio';
 
+/** One She Code Africa community chapter, as returned by the API. */
+interface Chapter {
+    name: string;
+    city?: string;
+    country?: string;
+    category?: { name?: string };
+    /** The chapter's own page - usually a Linktree, Instagram, or X profile. */
+    link?: string;
+    description?: string;
+    image?: string;
+}
+
+/** One page of chapters. */
+interface ChaptersResponse {
+    totalChapters: number;
+    totalPages: number;
+    currentPage: number;
+    data: Chapter[];
+}
+
 export const router = createCheerioRouter();
 
-router.addDefaultHandler(async ({ enqueueLinks, request, $, log, pushData }) => {
-    log.info('enqueueing new URLs');
-    await enqueueLinks();
+// The API replies with JSON, so we read `json` here instead of the Cheerio `$` you would use on
+// an HTML page. Crawlee parses it for us because the response says `Content-Type: application/json`.
+router.addDefaultHandler(async ({ request, json, log, pushData, addRequests }) => {
+    if (!json) {
+        log.warning(`No JSON came back from ${request.url} - is this the chapters API?`);
+        return;
+    }
 
-    // Extract title from the page.
-    const title = $('title').text();
-    log.info(`${title}`, { url: request.loadedUrl });
+    const { data: chapters = [], currentPage, totalPages, totalChapters } = json as ChaptersResponse;
 
-    // Save url and title to Dataset - a table-like storage.
-    await pushData({ url: request.loadedUrl, title });
+    log.info(`Page ${currentPage} of ${totalPages} - ${chapters.length} chapters here, ${totalChapters} in total`);
+
+    for (const chapter of chapters) {
+        // Most `city` values already end with the country ("Osun, Nigeria"), so only add it when missing.
+        const city = chapter.city ?? '';
+        const country = chapter.country ?? '';
+        const where = city.toLowerCase().includes(country.toLowerCase()) ? city : [city, country].filter(Boolean).join(', ');
+        log.info(`${chapter.name.trim()} (${where})`, { link: chapter.link });
+
+        // Save each chapter to the Dataset - a table-like storage you can export as JSON or CSV.
+        await pushData({
+            name: chapter.name,
+            category: chapter.category?.name,
+            city: chapter.city,
+            country: chapter.country,
+            link: chapter.link,
+            description: chapter.description,
+            image: chapter.image,
+        });
+    }
+
+    // We only learn how many pages exist after fetching the first one, so queue the rest from here.
+    if (currentPage === 1 && totalPages > 1) {
+        const nextPages = [];
+        for (let page = 2; page <= totalPages; page++) {
+            const url = new URL(request.url);
+            url.searchParams.set('page', String(page));
+            nextPages.push(url.href);
+        }
+
+        log.info(`Queueing ${nextPages.length} more pages`);
+        await addRequests(nextPages);
+    }
 });

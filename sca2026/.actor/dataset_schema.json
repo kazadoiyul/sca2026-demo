@@ -6,17 +6,29 @@
         "overview": {
             "title": "Overview",
             "transformation": {
-                "fields": ["title", "url"]
+                "fields": ["name", "category", "city", "country", "link"]
             },
             "display": {
                 "component": "table",
                 "properties": {
-                    "title": {
-                        "label": "Title",
+                    "name": {
+                        "label": "Chapter",
                         "format": "text"
                     },
-                    "url": {
-                        "label": "URL",
+                    "category": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "city": {
+                        "label": "City",
+                        "format": "text"
+                    },
+                    "country": {
+                        "label": "Country",
+                        "format": "text"
+                    },
+                    "link": {
+                        "label": "Link",
                         "format": "link"
                     }
                 }

@@ -1,8 +1,8 @@
-# TypeScript Crawlee & CheerioCrawler Actor Template
+# She Code Africa chapters scraper
 
-<!-- This is an Apify template readme -->
+Scrapes every [She Code Africa](https://shecodeafrica.org) community chapter - the name, where it is, and the link to its own page - and saves them to a dataset.
 
-This template example was built with [Crawlee](https://crawlee.dev/) to scrape data from a website using [Cheerio](https://cheerio.js.org/) wrapped into [CheerioCrawler](https://crawlee.dev/api/cheerio-crawler/class/CheerioCrawler).
+Built from the TypeScript [Crawlee](https://crawlee.dev/) + [CheerioCrawler](https://crawlee.dev/api/cheerio-crawler/class/CheerioCrawler) Actor template, then customized.
 
 ## Quick Start
 
@@ -29,7 +29,8 @@ apify push
 ├── input_schema.json # Input validation & Console form definition
 └── output_schema.json # Specifies where an Actor stores its output
 src/
-└── main.ts # Actor entry point and orchestrator
+├── main.ts # Actor entry point and orchestrator
+└── routes.ts # Handles each API page and saves chapters to the dataset
 storage/ # Local storage (mirrors Cloud during development)
 ├── datasets/ # Output items (JSON objects)
 ├── key_value_stores/ # Files, config, INPUT
@@ -41,10 +42,35 @@ For more information, see the [Actor definition](https://docs.apify.com/platform
 
 ## How it works
 
-This code is a TypeScript script that uses Cheerio to scrape data from a website. It then stores the website titles in a dataset.
+The She Code Africa website is a React app, so the HTML the server sends back is an empty
+`<div id="root">` - there is nothing in it for Cheerio to read. The page fills itself from a
+public JSON API, so this Actor scrapes that API directly. It is faster than rendering a browser,
+and the data arrives already structured.
 
-- The crawler starts with URLs provided from the input `startUrls` field defined by the input schema. Number of scraped pages is limited by `maxPagesPerCrawl` field from the input schema.
-- The crawler uses `requestHandler` for each URL to extract the data from the page with the Cheerio library and to save the title and URL of each page to the dataset. It also logs out each result that is being saved.
+- The crawler starts at page 1 of the chapters API, taken from the `startUrls` input field.
+- The response says how many pages exist, so `src/routes.ts` queues the remaining pages with
+  `addRequests()` after handling the first one.
+- Each chapter is saved to the dataset with its name, category, city, country, link, description,
+  and image.
+
+At the time of writing that is 46 chapters across 9 countries, fetched in 5 requests.
+
+> **Note:** She Code Africa is a non-profit running on a small server, so `maxConcurrency` is set
+> to 5 in `src/main.ts`. Please keep it low.
+
+## Example output
+
+```json
+{
+    "name": "SCA UNN",
+    "category": "Campus",
+    "city": "Enugu",
+    "country": "Nigeria",
+    "link": "https://linktr.ee/scaunn",
+    "description": "An SCA Chapter in the University of Nigeria Nsukka, Enugu",
+    "image": "https://ik.imagekit.io/gcrrtxwk5/SCA_WEBSITE_V3/PRODUCTION/CHAPTERS/50.png"
+}
+```
 
 ## What's included
 

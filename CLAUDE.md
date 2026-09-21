@@ -11,7 +11,9 @@ step count low.
 
 - [`README.md`](./README.md) - the walkthrough participants follow.
 - [`sca2026/`](./sca2026) - the finished example scraper (TypeScript, Crawlee + CheerioCrawler),
-  created with the exact steps in the README. Treat it as reference material.
+  created with the exact steps in the README. It scrapes the She Code Africa community chapters
+  from the site's public JSON API, because shecodeafrica.org is a React app that serves empty HTML.
+  Treat it as reference material.
 
 Participants scaffold their own Actor in their own folder with `apify create`. Do not rewrite
 `sca2026/` to become someone else's project.

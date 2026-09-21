@@ -1,25 +1,25 @@
 {
     "$schema": "https://apify.com/schemas/v1/input.ide.json",
-    "title": "CheerioCrawler Template",
+    "title": "She Code Africa chapters scraper",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
         "startUrls": {
             "title": "Start URLs",
             "type": "array",
-            "description": "URLs to start with.",
+            "description": "The She Code Africa chapters API. Start on page 1 - the Actor finds the remaining pages itself.",
             "editor": "requestListSources",
             "prefill": [
                 {
-                    "url": "https://apify.com"
+                    "url": "https://sca-v3-backend-prod-05e311d52a38.herokuapp.com/api/chapters/member-chapters?page=1"
                 }
             ]
         },
         "maxRequestsPerCrawl": {
-            "title": "Max Requests per Crawl",
+            "title": "Max requests per crawl",
             "type": "integer",
-            "description": "Maximum number of requests that can be made by this crawler.",
-            "default": 100
+            "description": "Maximum number of pages the crawler fetches. There are about 5 pages of chapters, so 20 is plenty.",
+            "default": 20
         }
     }
 }

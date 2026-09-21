@@ -22,8 +22,10 @@ export as JSON, CSV, or Excel.
 The scraper you create below starts from a ready-made template, so you do not write any scraping
 code to get your first result.
 
-> **Already have a scraper here?** The [`sca2026/`](./sca2026) folder is a finished example built
-> with exactly the steps on this page. Peek at it any time you want to see where you are heading.
+> **Want to see the finished thing first?** The [`sca2026/`](./sca2026) folder is a working
+> example built with exactly these steps. It scrapes every
+> [She Code Africa](https://shecodeafrica.org) community chapter and its link. Peek at it any time
+> you want to see where you are heading.
 
 ## Before you start
 
@@ -150,6 +152,12 @@ Now change one thing at a time and rerun:
   code.
 
 Rerun `apify run` after each change. Small steps, quick feedback.
+
+> **Stuck with an empty page?** Some sites are React or Vue apps: the server sends an almost empty
+> HTML file and the browser fills it in with JavaScript, so Cheerio sees nothing to scrape. Before
+> reaching for a browser crawler, open the **Network** tab in your browser's developer tools and
+> reload the page. If you spot a request returning JSON, you can often scrape that directly, which
+> is far faster. The [`sca2026/`](./sca2026) example does exactly this.
 
 ---
 
