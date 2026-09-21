@@ -48,7 +48,9 @@ the number is lower than 22, install Node first.
 
 ---
 
-## Step 1: Install the Apify CLI
+## Step 1: Install your tools
+
+### The Apify CLI
 
 The [Apify CLI](https://docs.apify.com/cli/) is the command line tool you use to create, run, and
 later deploy Actors.
@@ -66,6 +68,22 @@ apify --version
 You should see a version number. If you get a permissions error on macOS or Linux, see the
 [installation guide](https://docs.apify.com/cli/docs/installation) for alternatives such as
 Homebrew.
+
+### The Apify Actor Development skill (optional)
+
+If you use an AI coding tool that supports Agent Skills - [Claude Code](https://docs.claude.com/en/docs/claude-code),
+[Cursor](https://cursor.com/), or similar - install the Apify skill. It teaches your tool how
+Actors are put together, so the code it writes actually fits the platform:
+
+```bash
+npx skills add https://github.com/apify/agent-skills --skill apify-actor-development
+```
+
+Pick `apify-actor-development` when prompted. You can browse the rest in the
+[apify/agent-skills](https://github.com/apify/agent-skills) repo, and read what this one does in
+its [SKILL.md](https://github.com/apify/agent-skills/blob/main/skills/apify-actor-development/SKILL.md).
+
+Skip this if you would rather write everything yourself. Nothing later on this page depends on it.
 
 ---
 
@@ -150,6 +168,9 @@ Now change one thing at a time and rerun:
   selector for whatever you actually want, and add fields to the object it saves.
 - **Add an input option** - add a property to `.actor/input_schema.json`, then read it in your
   code.
+- **Let your AI tool do it** - if you installed the skill in step 1, describe the change you want
+  ("scrape the product price and rating too") and let the tool edit the route handler and the input
+  schema for you. Read what it produces before you run it.
 
 Rerun `apify run` after each change. Small steps, quick feedback.
 
@@ -189,6 +210,8 @@ share it. Full details in [Deploying your Actor](https://docs.apify.com/platform
 - [Cheerio docs](https://cheerio.js.org/) - how to select elements from HTML
 - [Apify SDK for JavaScript](https://docs.apify.com/sdk/js) and
   [for Python](https://docs.apify.com/sdk/python)
+- [apify/agent-skills](https://github.com/apify/agent-skills) - the Apify Actor Development skill
+  for AI coding tools
 
 **Actor structure and storage**
 
