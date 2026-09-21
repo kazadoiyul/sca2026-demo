@@ -6,13 +6,14 @@ import { Actor } from 'apify';
 // this is ESM project, and as such, it requires you to specify extensions in your relative imports
 // read more about this here: https://nodejs.org/docs/latest-v18.x/api/esm.html#mandatory-file-extensions
 // note that we need to use `.js` even when inside TS files
-import { router } from './routes.js';
+import { results, router } from './routes.js';
 
 interface Input {
     startUrls: {
         url: string;
     }[];
     maxRequestsPerCrawl: number;
+    resultsLimit?: number;
 }
 
 // The She Code Africa website (https://shecodeafrica.org) is a React app, so its HTML arrives
@@ -25,8 +26,13 @@ const CHAPTERS_API = 'https://sca-v3-backend-prod-05e311d52a38.herokuapp.com/api
 await Actor.init();
 
 // Structure of input is defined in input_schema.json
-const { startUrls = [{ url: CHAPTERS_API }], maxRequestsPerCrawl = 20 } =
+const { startUrls = [{ url: CHAPTERS_API }], maxRequestsPerCrawl = 20, resultsLimit } =
     (await Actor.getInput<Input>()) ?? ({} as Input);
+
+// Leaving `resultsLimit` empty means save every chapter.
+if (resultsLimit) {
+    results.limit = resultsLimit;
+}
 
 const crawler = new CheerioCrawler({
     maxRequestsPerCrawl,

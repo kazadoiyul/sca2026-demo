@@ -20,6 +20,13 @@
             "type": "integer",
             "description": "Maximum number of pages the crawler fetches. There are about 5 pages of chapters, so 20 is plenty.",
             "default": 20
+        },
+        "resultsLimit": {
+            "title": "Results limit",
+            "type": "integer",
+            "description": "Maximum number of chapters to save. Leave empty to save all of them (about 46).",
+            "minimum": 1,
+            "prefill": 20
         }
     }
 }

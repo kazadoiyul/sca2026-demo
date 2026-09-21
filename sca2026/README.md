@@ -52,11 +52,21 @@ and the data arrives already structured.
   `addRequests()` after handling the first one.
 - Each chapter is saved to the dataset with its name, category, city, country, link, description,
   and image.
+- `resultsLimit` caps how many chapters get saved. Leave it empty to save all of them. If the
+  limit is filled by page 1, the remaining pages are never fetched at all.
 
 At the time of writing that is 46 chapters across 9 countries, fetched in 5 requests.
 
 > **Note:** She Code Africa is a non-profit running on a small server, so `maxConcurrency` is set
 > to 5 in `src/main.ts`. Please keep it low.
+
+## Input
+
+| Field | Type | What it does |
+| --- | --- | --- |
+| `startUrls` | array | Where to start. Defaults to page 1 of the chapters API. |
+| `maxRequestsPerCrawl` | integer | Cap on pages fetched. There are about 5, so 20 is plenty. |
+| `resultsLimit` | integer | Cap on chapters saved. Empty means all of them (about 46). |
 
 ## Example output
 
