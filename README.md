@@ -238,6 +238,10 @@ Details in [Run Actor and retrieve data via API](https://docs.apify.com/academy/
 Your scraper runs in the cloud. The last step is putting it on
 [Apify Store](https://apify.com/store), where other people can find it, run it, and pay for it.
 
+One requirement first: you cannot publish an Actor until it has at least one run on the platform.
+If you started your Actor in step 6, you are already set. If you skipped that, go back and run it
+in Apify Console once.
+
 ### 1. Publish to Apify Store
 
 Open your Actor in Apify Console, go to the **Publishing** tab, and fill in every section: a logo
@@ -248,11 +252,9 @@ README becomes its Store page, so make it good. When all sections are marked com
 
 ### 2. Pick a pricing model
 
-In the **Publishing** tab, open the **Monetization** section and follow the wizard:
-
-- **Pay per usage** - users pay for the platform resources their run consumes. Simplest to set up.
-- **Pay per event** - you define the events users pay for, such as each result returned. Usually
-  the better fit for a scraper, because the price tracks the value delivered.
+In the **Publishing** tab, open the **Monetization** section and follow the wizard. Scrapers use
+**pay per event**: you define the events users pay for, such as each result returned, so the price
+tracks the value you deliver.
 
 Pick your **primary event** (the one that best represents what your Actor delivers, for example one
 scraped item), review, and submit. Walkthrough in
@@ -264,10 +266,6 @@ Once people are using it, your earnings show up in Apify Console under
 **Development > Insights**. Payout invoices are generated monthly, and the same place is where you
 fill in your payout details and verify your identity when you are ready to be paid. See
 [Monthly payouts](https://docs.apify.com/platform/actors/publishing/monetize/monthly-payouts).
-
-> **Note:** Pay-per-event Actors with limited permissions automatically become eligible for
-> autonomous agent payment over protocols like x402 and Skyfire, so an AI agent can discover and
-> pay for your scraper on its own. Pay-per-usage Actors are not eligible.
 
 ---
 
