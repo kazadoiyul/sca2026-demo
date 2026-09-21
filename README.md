@@ -1,9 +1,10 @@
 # Build your first web scraper on Apify
 
-Hackathon starter material. By the end of this page you will have the Apify CLI installed and a
-working web scraper running on your own machine, in about 15 minutes.
+Hackathon starter material. By the end of this page you will have built a web scraper, run it on
+your own machine, deployed it to the cloud, and put a price on it - in about 40 minutes.
 
-No prior Apify experience needed. If you can open a terminal, you can do this.
+No prior Apify experience needed. If you can open a terminal, you can do this. Steps 1 to 5 are the
+core; steps 6 and 7 take it to the cloud and to Apify Store.
 
 ## What you are building
 
@@ -33,9 +34,9 @@ You need two things:
 
 1. **[Node.js 22 or newer](https://nodejs.org/)** - the Apify CLI runs on Node. Download the LTS
    installer from [nodejs.org](https://nodejs.org/) if you do not have it.
-2. **A free [Apify account](https://console.apify.com/sign-up)** - you do not need it to create
-   and run a scraper locally, but you will want it the moment you deploy. Signing up now saves
-   you a detour later.
+2. **A free [Apify account](https://console.apify.com/sign-up)** - not needed for steps 1 to 5,
+   which run entirely on your machine. You do need it from step 6 onwards, so sign up now and save
+   yourself the detour.
 
 Check your Node version:
 
@@ -182,17 +183,95 @@ Rerun `apify run` after each change. Small steps, quick feedback.
 
 ---
 
-## Where to go next
+## Step 6: Deploy it to the cloud
 
-You have a working scraper. When you are ready to put it in the cloud:
+Your scraper works on your machine. Now put it on the Apify platform so it runs in the cloud, on a
+schedule, and can be started by anyone over the API.
+
+### 1. Get your API token
+
+In Apify Console, open [**Settings > API & Integrations**](https://console.apify.com/settings/integrations)
+and copy your personal API token.
+
+### 2. Log in from the CLI
 
 ```bash
-apify login   # paste the API token from Apify Console
-apify push    # builds and uploads your Actor
+apify login
 ```
 
-`apify push` prints a link to your Actor in Apify Console, where you can run it, schedule it, and
-share it. Full details in [Deploying your Actor](https://docs.apify.com/platform/actors/development/deployment).
+Paste the token when prompted. This links the CLI to your account, and you only do it once.
+
+### 3. Push it
+
+```bash
+apify push
+```
+
+This uploads your code and builds your Actor in the cloud. It takes a minute or two. When it
+finishes, the CLI prints a link to your Actor in Apify Console.
+
+### 4. Run it in Apify Console
+
+Open that link, check the input form (it is generated from your `input_schema.json`), and click
+**Start**. When the run finishes, open the **Output** tab and confirm you get the same data you got
+locally. See [Running Actors](https://docs.apify.com/platform/actors/running) for a tour of the
+run screen.
+
+### 5. Note your API endpoint
+
+Every Actor gets an HTTP endpoint, so anything - your hackathon project, a cron job, another
+agent - can start it and collect the results:
+
+```
+https://api.apify.com/v2/acts/<your-username>~<actor-name>/runs?token=<API_TOKEN>
+```
+
+Details in [Run Actor and retrieve data via API](https://docs.apify.com/academy/api/run-actor-and-retrieve-data-via-api).
+
+> **Note:** Local `storage/` is local only. It is never uploaded by `apify push`. Cloud runs write
+> to cloud storage, which you read in Apify Console or over the API.
+
+---
+
+## Step 7: Publish and monetize
+
+Your scraper runs in the cloud. The last step is putting it on
+[Apify Store](https://apify.com/store), where other people can find it, run it, and pay for it.
+
+### 1. Add your billing details
+
+In Apify Console, go to **Settings > Billing** and fill in your billing and payout details. You
+need this before you can be paid.
+
+### 2. Publish to Apify Store
+
+Open your Actor in Apify Console, go to the **Publication** tab, and work through the checklist:
+title, description, categories, and a README (the one in your Actor folder becomes your Store
+listing, so make it good). Then submit. Full checklist in
+[Publish your Actor](https://docs.apify.com/platform/actors/publishing/publish).
+
+### 3. Pick a pricing model
+
+In the **Publication** tab, open **Monetization** and follow the wizard:
+
+- **Pay per usage** - users pay for the platform resources their run consumes. Simplest to set up.
+- **Pay per event** - you define the events users pay for, such as each result returned. Usually
+  the better fit for a scraper, because the price tracks the value delivered.
+
+Pick your **primary event** (the one that best represents what your Actor delivers, for example one
+scraped item), review, and submit. Walkthrough in
+[Monetize your Actor](https://docs.apify.com/platform/actors/publishing/monetize).
+
+### 4. Watch your earnings
+
+Once people are using it, your earnings show up in Apify Console under **Insights**. Payout
+invoices are generated monthly.
+
+> **Note:** Pay-per-event Actors with limited permissions automatically become eligible for
+> autonomous agent payment over protocols like x402 and Skyfire, so an AI agent can discover and
+> pay for your scraper on its own. Pay-per-usage Actors are not eligible.
+
+---
 
 ## Useful links
 
@@ -218,6 +297,16 @@ share it. Full details in [Deploying your Actor](https://docs.apify.com/platform
 - [Actor definition](https://docs.apify.com/platform/actors/development/actor-definition)
 - [Input schema](https://docs.apify.com/platform/actors/development/actor-definition/input-schema)
 - [Storage and datasets](https://docs.apify.com/platform/storage)
+
+**Deploying, publishing, and monetizing**
+
+- [Deploying your Actor](https://docs.apify.com/platform/actors/development/deployment)
+- [Running Actors](https://docs.apify.com/platform/actors/running) and
+  [Run Actor and retrieve data via API](https://docs.apify.com/academy/api/run-actor-and-retrieve-data-via-api)
+- [Publish your Actor](https://docs.apify.com/platform/actors/publishing/publish) and the
+  [publishing overview](https://docs.apify.com/platform/actors/publishing)
+- [Monetize your Actor](https://docs.apify.com/platform/actors/publishing/monetize)
+- [Apify API reference](https://docs.apify.com/api/v2)
 
 **Skip the building**
 
