@@ -1,0 +1,195 @@
+# Build your first web scraper on Apify
+
+Hackathon starter material. By the end of this page you will have the Apify CLI installed and a
+working web scraper running on your own machine, in about 15 minutes.
+
+No prior Apify experience needed. If you can open a terminal, you can do this.
+
+## What you are building
+
+An **[Actor](https://docs.apify.com/platform/actors)** is a small program that runs on
+[the Apify platform](https://docs.apify.com/platform). It works like this:
+
+```
+JSON input  ->  your code runs  ->  results saved to a dataset
+```
+
+That is the whole idea. You give it some input (for example, a list of URLs), it does a job (for
+example, scrapes those pages), and it writes the results to a
+[dataset](https://docs.apify.com/platform/storage/dataset), which is a table-like storage you can
+export as JSON, CSV, or Excel.
+
+The scraper you create below starts from a ready-made template, so you do not write any scraping
+code to get your first result.
+
+> **Already have a scraper here?** The [`sca2026/`](./sca2026) folder is a finished example built
+> with exactly the steps on this page. Peek at it any time you want to see where you are heading.
+
+## Before you start
+
+You need two things:
+
+1. **[Node.js 22 or newer](https://nodejs.org/)** - the Apify CLI runs on Node. Download the LTS
+   installer from [nodejs.org](https://nodejs.org/) if you do not have it.
+2. **A free [Apify account](https://console.apify.com/sign-up)** - you do not need it to create
+   and run a scraper locally, but you will want it the moment you deploy. Signing up now saves
+   you a detour later.
+
+Check your Node version:
+
+```bash
+node --version
+```
+
+If that prints something like `v22.11.0` or higher, you are good. If the command is not found or
+the number is lower than 22, install Node first.
+
+---
+
+## Step 1: Install the Apify CLI
+
+The [Apify CLI](https://docs.apify.com/cli/) is the command line tool you use to create, run, and
+later deploy Actors.
+
+```bash
+npm install -g apify-cli
+```
+
+Verify it worked:
+
+```bash
+apify --version
+```
+
+You should see a version number. If you get a permissions error on macOS or Linux, see the
+[installation guide](https://docs.apify.com/cli/docs/installation) for alternatives such as
+Homebrew.
+
+---
+
+## Step 2: Create your scraper from a template
+
+Run this from wherever you keep your projects:
+
+```bash
+apify create
+```
+
+The CLI asks you a few questions:
+
+1. **Actor name** - anything you like, for example `my-first-scraper`. This becomes the folder
+   name, so stick to lowercase letters, numbers, and hyphens.
+2. **Programming language** - pick **JavaScript**, **TypeScript**, or **Python**, whichever you
+   are most comfortable with.
+3. **Template** - pick a **Crawlee + CheerioCrawler** template (it is usually named something like
+   "Crawlee + Cheerio"). Cheerio is fast and good for regular HTML pages. If your target site
+   needs a real browser to render, pick a **Playwright** template instead.
+
+The CLI creates a folder with all the files and installs the dependencies for you. Move into it:
+
+```bash
+cd my-first-scraper
+```
+
+> **Tip:** Browse every available starter at [Apify templates](https://apify.com/templates) before
+> you choose. There is one for most common starting points.
+
+---
+
+## Step 3: Look around the files
+
+Open the new folder in your editor. These are the parts that matter:
+
+| File | What it is |
+| --- | --- |
+| `src/main.ts` (or `main.js` / `main.py`) | Your code. This is where the scraper starts. |
+| [`.actor/actor.json`](https://docs.apify.com/platform/actors/development/actor-definition/actor-json) | Your Actor's name, version, and settings. |
+| [`.actor/input_schema.json`](https://docs.apify.com/platform/actors/development/actor-definition/input-schema) | What input your Actor accepts. It also generates the input form in Apify Console. |
+| [`Dockerfile`](https://docs.apify.com/platform/actors/development/actor-definition/dockerfile) | How your Actor gets built and run in the cloud. You rarely need to touch this. |
+| `storage/` | Local storage. Created when you run the Actor. Your results land here. |
+
+In the Cheerio template, `src/` also has a `routes` file. That is the part that runs for every page
+the crawler visits and decides what to pull off it, so it is the first place to edit when you want
+different data.
+
+---
+
+## Step 4: Run it locally
+
+```bash
+apify run
+```
+
+Watch the log. The crawler visits the start URLs, extracts data, and prints each result as it
+saves it.
+
+When it finishes, open:
+
+```
+storage/datasets/default/
+```
+
+Every result is one JSON file in that folder. That is your scraped data. The input the Actor read
+is in `storage/key_value_stores/default/INPUT.json`, and you can edit that file to change the
+input for your next local run.
+
+> **Note:** If you want to rerun from a clean slate, use `apify run --purge` to wipe the local
+> storage before the run. Otherwise the crawler remembers which URLs it already visited.
+
+---
+
+## Step 5: Make it yours
+
+Now change one thing at a time and rerun:
+
+- **Change the target site** - edit `startUrls` in `storage/key_value_stores/default/INPUT.json`,
+  or change the default in `.actor/input_schema.json`.
+- **Change what gets scraped** - in the route handler, the template grabs the page title. Swap that
+  selector for whatever you actually want, and add fields to the object it saves.
+- **Add an input option** - add a property to `.actor/input_schema.json`, then read it in your
+  code.
+
+Rerun `apify run` after each change. Small steps, quick feedback.
+
+---
+
+## Where to go next
+
+You have a working scraper. When you are ready to put it in the cloud:
+
+```bash
+apify login   # paste the API token from Apify Console
+apify push    # builds and uploads your Actor
+```
+
+`apify push` prints a link to your Actor in Apify Console, where you can run it, schedule it, and
+share it. Full details in [Deploying your Actor](https://docs.apify.com/platform/actors/development/deployment).
+
+## Useful links
+
+**Getting started**
+
+- [Apify CLI installation](https://docs.apify.com/cli/docs/installation) and
+  [command reference](https://docs.apify.com/cli/docs/reference)
+- [Apify templates](https://apify.com/templates)
+- [Web scraping for beginners](https://docs.apify.com/academy/web-scraping-for-beginners) academy
+  course
+
+**Writing the scraper**
+
+- [Crawlee docs](https://crawlee.dev/) - the scraping library behind the templates
+- [Cheerio docs](https://cheerio.js.org/) - how to select elements from HTML
+- [Apify SDK for JavaScript](https://docs.apify.com/sdk/js) and
+  [for Python](https://docs.apify.com/sdk/python)
+
+**Actor structure and storage**
+
+- [Actor definition](https://docs.apify.com/platform/actors/development/actor-definition)
+- [Input schema](https://docs.apify.com/platform/actors/development/actor-definition/input-schema)
+- [Storage and datasets](https://docs.apify.com/platform/storage)
+
+**Skip the building**
+
+- [Apify Store](https://apify.com/store) - thousands of ready-made scrapers you can call from your
+  own project instead of writing one
+- [Apify API reference](https://docs.apify.com/api/v2) - run any Actor from any stack
