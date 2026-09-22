@@ -1,7 +1,7 @@
-# Build your first web scraper on Apify
+# Build your first Actor on Apify
 
-Hackathon starter material. By the end of this page you will have built a web scraper, run it on
-your own machine, deployed it to the cloud, and put a price on it - in about 40 minutes.
+Hackathon starter material. By the end of this page you will have built an Actor, run it on your
+own machine, deployed it to the cloud, and put a price on it - in about 40 minutes.
 
 No prior Apify experience needed. If you can open a terminal, you can do this. Steps 1 to 5 are the
 core; steps 6 and 7 take it to the cloud and to Apify Store.
@@ -20,8 +20,11 @@ example, scrapes those pages), and it writes the results to a
 [dataset](https://docs.apify.com/platform/storage/dataset), which is a table-like storage you can
 export as JSON, CSV, or Excel.
 
-The scraper you create below starts from a ready-made template, so you do not write any scraping
-code to get your first result.
+A scraper is the most common kind of Actor, but the shape fits anything you can run: an AI agent,
+an MCP server, an API wrapper, a test runner, or any automation of your own. There is a template
+for each of those, and everything on this page works the same whichever one you pick. The
+walkthrough below follows a scraper template because it gives you a result in one command, without
+writing any code.
 
 > **Want to see the finished thing first?** The [`sca2026/`](./sca2026) folder is a working
 > example built with exactly these steps. It scrapes every
@@ -88,7 +91,7 @@ Skip this if you would rather write everything yourself. Nothing later on this p
 
 ---
 
-## Step 2: Create your scraper from a template
+## Step 2: Create your Actor from a template
 
 Run this from wherever you keep your projects:
 
@@ -98,18 +101,20 @@ apify create
 
 The CLI asks you a few questions:
 
-1. **Actor name** - anything you like, for example `my-first-scraper`. This becomes the folder
+1. **Actor name** - anything you like, for example `my-first-actor`. This becomes the folder
    name, so stick to lowercase letters, numbers, and hyphens.
 2. **Programming language** - pick **JavaScript**, **TypeScript**, or **Python**, whichever you
    are most comfortable with.
-3. **Template** - pick a **Crawlee + CheerioCrawler** template (it is usually named something like
-   "Crawlee + Cheerio"). Cheerio is fast and good for regular HTML pages. If your target site
-   needs a real browser to render, pick a **Playwright** template instead.
+3. **Template** - pick a **Cheerio crawler** template. Cheerio is fast and good for regular HTML
+   pages. If your target site needs a real browser to render, pick a **Playwright** template
+   instead. Building something that is not a scraper? The list also has AI agent templates
+   (LangGraph, CrewAI, PydanticAI, and more), MCP servers, API Actors, test runners, and an empty
+   Actor you can fill with anything. Steps 3 to 7 apply to all of them.
 
 The CLI creates a folder with all the files and installs the dependencies for you. Move into it:
 
 ```bash
-cd my-first-scraper
+cd my-first-actor
 ```
 
 > **Tip:** Browse every available starter at [Apify templates](https://apify.com/templates) before
@@ -123,7 +128,7 @@ Open the new folder in your editor. These are the parts that matter:
 
 | File | What it is |
 | --- | --- |
-| `src/main.ts` (or `main.js` / `main.py`) | Your code. This is where the scraper starts. |
+| `src/main.ts` (or `main.js` / `main.py`) | Your code. This is where your Actor starts. |
 | [`.actor/actor.json`](https://docs.apify.com/platform/actors/development/actor-definition/actor-json) | Your Actor's name, version, and settings. |
 | [`.actor/input_schema.json`](https://docs.apify.com/platform/actors/development/actor-definition/input-schema) | What input your Actor accepts. It also generates the input form in Apify Console. |
 | [`Dockerfile`](https://docs.apify.com/platform/actors/development/actor-definition/dockerfile) | How your Actor gets built and run in the cloud. You rarely need to touch this. |
@@ -150,7 +155,7 @@ When it finishes, open:
 storage/datasets/default/
 ```
 
-Every result is one JSON file in that folder. That is your scraped data. The input the Actor read
+Every result is one JSON file in that folder. That is your output data. The input the Actor read
 is in `storage/key_value_stores/default/INPUT.json`, and you can edit that file to change the
 input for your next local run.
 
@@ -165,17 +170,22 @@ input for your next local run.
 
 ## Step 5: Make it yours
 
-Now change one thing at a time and rerun:
+Now change one thing at a time and rerun. Whatever your Actor does, the two levers are the same:
+the input it accepts, and the code that runs. In the Cheerio template that looks like this:
 
 - **Change the target site** - edit `startUrls` in `storage/key_value_stores/default/INPUT.json`,
   or change the default in `.actor/input_schema.json`.
 - **Change what gets scraped** - in the route handler, the template grabs the page title. Swap that
   selector for whatever you actually want, and add fields to the object it saves.
 - **Add an input option** - add a property to `.actor/input_schema.json`, then read it in your
-  code.
+  code. This is how any Actor takes an option, scraper or not.
+- **Replace the job entirely** - nothing ties an Actor to crawling. Call an API, run an AI agent,
+  transform a file: as long as you read the input and push results with the Apify SDK
+  (`Actor.getInput()` and `Actor.pushData()`, or `get_input()` and `push_data()` in Python),
+  everything else on this page works the same.
 - **Let your AI tool do it** - if you installed the skill in step 1, describe the change you want
-  ("scrape the product price and rating too") and let the tool edit the route handler and the input
-  schema for you. Read what it produces before you run it.
+  ("scrape the product price and rating too") and let the tool edit the code and the input schema
+  for you. Read what it produces before you run it.
 
 Rerun `apify run` after each change. Small steps, quick feedback.
 
@@ -189,7 +199,7 @@ Rerun `apify run` after each change. Small steps, quick feedback.
 
 ## Step 6: Deploy it to the cloud
 
-Your scraper works on your machine. Now put it on the Apify platform so it runs in the cloud, on a
+Your Actor works on your machine. Now put it on the Apify platform so it runs in the cloud, on a
 schedule, and can be started by anyone over the API.
 
 ### 1. Get your API token
@@ -239,7 +249,7 @@ Details in [Run Actor and retrieve data via API](https://docs.apify.com/academy/
 
 ## Step 7: Publish and monetize
 
-Your scraper runs in the cloud. The last step is putting it on
+Your Actor runs in the cloud. The last step is putting it on
 [Apify Store](https://apify.com/store), where other people can find it, run it, and pay for it.
 
 One requirement first: you cannot publish an Actor until it has at least one run on the platform.
@@ -256,12 +266,12 @@ README becomes its Store page, so make it good. When all sections are marked com
 
 ### 2. Pick a pricing model
 
-In the **Publishing** tab, open the **Monetization** section and follow the wizard. Scrapers use
+In the **Publishing** tab, open the **Monetization** section and follow the wizard. Most Actors use
 **pay per event**: you define the events users pay for, such as each result returned, so the price
 tracks the value you deliver.
 
 Pick your **primary event** (the one that best represents what your Actor delivers, for example one
-scraped item), review, and submit. Walkthrough in
+result), review, and submit. Walkthrough in
 [Monetize your Actor](https://docs.apify.com/platform/actors/publishing/monetize).
 
 ### 3. Watch your earnings
@@ -283,7 +293,7 @@ fill in your payout details and verify your identity when you are ready to be pa
 - [Web scraping for beginners](https://docs.apify.com/academy/web-scraping-for-beginners) academy
   course
 
-**Writing the scraper**
+**Writing your Actor**
 
 - [Crawlee docs](https://crawlee.dev/) - the scraping library behind the templates
 - [Cheerio docs](https://cheerio.js.org/) - how to select elements from HTML
@@ -310,6 +320,6 @@ fill in your payout details and verify your identity when you are ready to be pa
 
 **Skip the building**
 
-- [Apify Store](https://apify.com/store) - thousands of ready-made scrapers you can call from your
+- [Apify Store](https://apify.com/store) - thousands of ready-made Actors you can call from your
   own project instead of writing one
 - [Apify API reference](https://docs.apify.com/api/v2) - run any Actor from any stack
